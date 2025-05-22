@@ -15,7 +15,7 @@ public class TypeInfo {
     }
 
 
-    // Type -> DamageRelations
+    // Type -> DamageRelations (damage_relations ->  double_damage_from / double_damage_to )
     public static class DamageRelations {
         private List<TypeRef> double_damage_to;
         private List<TypeRef> double_damage_from;
@@ -32,7 +32,7 @@ public class TypeInfo {
             return double_damage_from;
         }
 
-        // Type -> DamageRelations -> TypeRef
+        // Type -> DamageRelations -> TypeRef   (damage_relations ->  double_damage_from / double_damage_to -> name )
         public static class TypeRef {
             private String name;
 
@@ -42,14 +42,14 @@ public class TypeInfo {
         }
     }
 
-    // Type -> PokemonSet
+    // Type -> PokemonSlot (pokemon -> pokemon)
     public static class PokemonSlot {
         private PokemonRef pokemon;
         public PokemonRef getPokemon() {
             return pokemon;
         }
 
-        // Type -> PokemonSet -> PokemonRef
+        // Type -> PokemonSlot -> PokemonRef  (pokemon -> pokemon -> name)
         public static class PokemonRef {
             private String name;
             public String getName () {
