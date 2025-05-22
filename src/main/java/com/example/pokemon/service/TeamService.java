@@ -1,19 +1,21 @@
 package com.example.pokemon.service;
 
+import com.example.pokemon.api.PokemonApiAbrufer;
 import com.example.pokemon.model.Pokemon;
 import com.example.pokemon.team.TeamManagerImpl;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TeamService {
     private final List<Pokemon> team = new ArrayList<>();
     private final TeamManagerImpl teamManager;
+    private final PokemonApiAbrufer api;
 
-    public TeamService(TeamManagerImpl teamManager) {
+    public TeamService(TeamManagerImpl teamManager, PokemonApiAbrufer api) {
         this.teamManager = teamManager;
+        this.api = api;
     }
 
     public void add(Pokemon p) {
@@ -33,4 +35,9 @@ public class TeamService {
         team.clear();
         team.addAll(loaded);
     }
+
+    public List<String> searchByType(String typeName) throws IOException {
+        return api.getByType(typeName);
+    }
+
 }

@@ -22,7 +22,7 @@ public class Main {
 
         PokemonApiAbrufer apiAbrufer = new PokemonApiAbrufer(client, gson);
         TeamManagerImpl tm = new TeamManagerImpl(gson, mapper);
-        TeamService teamService = new TeamService(tm);
+        TeamService teamService = new TeamService(tm, apiAbrufer);
         CommandHandler commandHandler = new CommandHandler(apiAbrufer, teamService, scan);
 
         boolean flag = true;

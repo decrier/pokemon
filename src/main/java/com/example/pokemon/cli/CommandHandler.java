@@ -4,6 +4,8 @@ import com.example.pokemon.api.PokemonApiAbrufer;
 import com.example.pokemon.service.TeamService;
 import com.example.pokemon.model.Pokemon;
 
+import java.sql.SQLOutput;
+import java.util.List;
 import java.util.Scanner;
 
 public class CommandHandler {
@@ -20,7 +22,7 @@ public class CommandHandler {
 
     public boolean handle() {
         System.out.println("\nPokemon-MENU:");
-        System.out.println("1. Suchen\n2. Team anzeigen\n3. Team speichern\n4. Team laden\n5. Exit");
+        System.out.println("1. Suchen\n2. Team anzeigen\n3. Team speichern\n4. Team laden\n5. Exit\n6. Suche nach Typ");
         System.out.print("Ihre Eingabe: ");
         int cmd = Integer.parseInt(scan.nextLine());
 
@@ -70,7 +72,11 @@ public class CommandHandler {
                 }
 
                 case 6 -> {
-
+                    System.out.print("Gebe den Pokemon-Typ ein: ");
+                    String type = scan.nextLine().trim().toLowerCase();
+                    List<String> pokemons = teamService.searchByType(type);
+                    System.out.printf("Pokemons des Typs %s", type);
+                    pokemons.forEach(System.out::println);
                 }
 
                 default -> System.out.println("Unbekannter Befehl");

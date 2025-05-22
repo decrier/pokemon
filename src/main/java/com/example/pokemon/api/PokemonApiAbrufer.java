@@ -49,9 +49,9 @@ public class PokemonApiAbrufer implements PokemonApi{
                 throw new IOException("Typ nicht gefunden");
             }
             TypeInfo info = gson.fromJson(response.body(), TypeInfo.class);
-            return info.getPokemonSet().stream()
-                    .map(TypeInfo.PokemonSet::getPokemon)
-                    .map(TypeInfo.PokemonSet.PokemonRef::getName)
+            return info.getPokemon().stream()
+                    .map(TypeInfo.PokemonSlot::getPokemon)
+                    .map(TypeInfo.PokemonSlot.PokemonRef::getName)
                     .collect(Collectors.toList());
         } catch (IOException | InterruptedException e) {
             throw new IOException(e.getMessage());

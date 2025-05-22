@@ -4,14 +4,14 @@ import java.util.List;
 
 public class TypeInfo {
     private DamageRelations damage_relations;
-    private List<PokemonSet> pokemonSet;
+    private List<PokemonSlot> pokemon;
 
     public DamageRelations getDamageRelations () {
         return damage_relations;
     }
 
-    public List<PokemonSet> getPokemonSet () {
-        return pokemonSet;
+    public List<PokemonSlot> getPokemon() {
+        return pokemon;
     }
 
 
@@ -43,7 +43,7 @@ public class TypeInfo {
     }
 
     // Type -> PokemonSet
-    public static class PokemonSet {
+    public static class PokemonSlot {
         private PokemonRef pokemon;
         public PokemonRef getPokemon() {
             return pokemon;
@@ -56,5 +56,10 @@ public class TypeInfo {
                 return name;
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "";
     }
 }
