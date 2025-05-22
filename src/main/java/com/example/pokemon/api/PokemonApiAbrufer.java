@@ -37,31 +37,10 @@ public class PokemonApiAbrufer implements PokemonApi{
             throw new IOException(e.getMessage());
         }
     }
-
+    
     @Override
-    public List<String> getByType(String typeName) throws IOException{
+    public TypeInfo getTypeInfo (String typeName) throws IOException{
         String url = "https://pokeapi.co/api/v2/type/" + typeName;
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
-
-        try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() != 200) {
-                throw new IOException("Typ nicht gefunden");
-            }
-            TypeInfo info = gson.fromJson(response.body(), TypeInfo.class);
-            return info.getPokemon().stream()
-                    .map(TypeInfo.PokemonSlot::getPokemon)
-                    .map(TypeInfo.PokemonSlot.PokemonRef::getName)
-                    .collect(Collectors.toList());
-        } catch (IOException | InterruptedException e) {
-            throw new IOException(e.getMessage());
-        }
-
-    }
-
-    @Override
-    public TypeInfo getTypeInfo (String typeInfo) throws IOException{
-        String url = "https://pokeapi.co/api/v2/type/" + typeInfo;
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
         try {
@@ -73,6 +52,15 @@ public class PokemonApiAbrufer implements PokemonApi{
         } catch (IOException | InterruptedException e) {
             throw new IOException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<String> getByType(String typeName) throws IOException {
+        TypeInfo info = getTypeInfo(typeName);
+        return info.getPokemon().stream()
+                    .map(TypeInfo.PokemonSlot::getPokemon)
+                    .map(TypeInfo.PokemonSlot.PokemonRef::getName)
+                    .collect(Collectors.toList());
     }
 }
 
