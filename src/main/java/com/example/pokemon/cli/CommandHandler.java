@@ -69,6 +69,10 @@ public class CommandHandler {
                     return false;
                 }
 
+                case 6 -> {
+
+                }
+
                 default -> System.out.println("Unbekannter Befehl");
 
             }

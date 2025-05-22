@@ -9,6 +9,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PokemonApiAbrufer implements PokemonApi{
 
@@ -34,6 +36,27 @@ public class PokemonApiAbrufer implements PokemonApi{
         } catch (IOException | InterruptedException e) {
             throw new IOException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<String> getByType(String typeName) throws IOException{
+        String url = "https://pokeapi.co/api/v2/type/" + typeName;
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                throw new IOException("Typ nicht gefunden");
+            }
+            TypeInfo info = gson.fromJson(response.body(), TypeInfo.class);
+            return info.getPokemonSet().stream()
+                    .map(TypeInfo.PokemonSet::getPokemon)
+                    .map(TypeInfo.PokemonSet.PokemonRef::getName)
+                    .collect(Collectors.toList());
+        } catch (IOException | InterruptedException e) {
+            throw new IOException(e.getMessage());
+        }
+
     }
 
     @Override
