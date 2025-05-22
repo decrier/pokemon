@@ -22,7 +22,8 @@ public class CommandHandler {
 
     public boolean handle() {
         System.out.println("\nPokemon-MENU:");
-        System.out.println("1. Suchen\n2. Team anzeigen\n3. Team speichern\n4. Team laden\n5. Exit\n6. Suche nach Typ");
+        System.out.println("1. Suchen\n2. Team anzeigen\n3. Team speichern\n4. Team laden\n5. Exit\n" +
+                "6. Suche nach Typ\n7. Stark und Schwach gegen\n8. Stark gegen\n9. Schwach gegen\n");
         System.out.print("Ihre Eingabe: ");
         int cmd = Integer.parseInt(scan.nextLine());
 
@@ -77,6 +78,32 @@ public class CommandHandler {
                     List<String> pokemons = teamService.searchByType(type);
                     System.out.printf("Pokemons des Typs %s", type);
                     pokemons.forEach(System.out::println);
+                }
+
+                case 7 -> {
+                    System.out.print("Stark gegen (Typ): ");
+                    String strong = scan.nextLine();
+                    System.out.print("Schwach gegen (Typ): ");
+                    String weak = scan.nextLine();
+                    List<String> types = teamService.searchStrongWeak(strong, weak);
+                    System.out.printf("Typen, die stark gegen %s und schwach gegen %s sind:\n", strong, weak);
+                    types.forEach(System.out::println);
+                }
+
+                case 8 -> {
+                    System.out.print("Stark gegen (Typ): ");
+                    String strong = scan.nextLine();
+                    List<String> types = teamService.searchWeaks(strong);
+                    System.out.printf("\nTyp \"%s\" richtet doppelten Schaden an:\n", strong);
+                    types.forEach(System.out::println);
+                }
+
+                case 9 -> {
+                    System.out.print("Schwach gegen (Typ): ");
+                    String weak = scan.nextLine();
+                    List<String> types = teamService.searchStrongs(weak);
+                    System.out.printf("\nTyp \"%s\" erleidet doppelten Schaden durch:\n", weak);
+                    types.forEach(System.out::println);
                 }
 
                 default -> System.out.println("Unbekannter Befehl");

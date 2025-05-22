@@ -24,21 +24,18 @@ public class TypeInfo {
             return double_damage_to;
         }
 
-        public List<TypeRef> getDouble_damage_from() {
+        public List<TypeRef> getDoubleDamageFrom() {
             return double_damage_from;
         }
 
-        public List<TypeRef> doubleDamageFrom() {
-            return double_damage_from;
-        }
 
-        // Type -> DamageRelations -> TypeRef   (damage_relations ->  double_damage_from / double_damage_to -> name )
-        public static class TypeRef {
-            private String name;
+    }
+    // Type -> DamageRelations -> TypeRef   (damage_relations ->  double_damage_from / double_damage_to -> name )
+    public static class TypeRef {
+        private String name;
 
-            public String getName () {
-                return name;
-            }
+        public String getName () {
+            return name;
         }
     }
 

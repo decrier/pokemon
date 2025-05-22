@@ -37,7 +37,7 @@ public class PokemonApiAbrufer implements PokemonApi{
             throw new IOException(e.getMessage());
         }
     }
-    
+
     @Override
     public TypeInfo getTypeInfo (String typeName) throws IOException{
         String url = "https://pokeapi.co/api/v2/type/" + typeName;
