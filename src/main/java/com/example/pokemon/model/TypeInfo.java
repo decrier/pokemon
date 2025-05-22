@@ -1,10 +1,8 @@
 package com.example.pokemon.model;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import java.util.List;
 
-public class Type {
+public class TypeInfo {
     private DamageRelations damage_relations;
 
     public DamageRelations getDamageRelations () {

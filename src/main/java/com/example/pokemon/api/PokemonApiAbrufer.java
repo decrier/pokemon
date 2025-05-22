@@ -1,6 +1,7 @@
 package com.example.pokemon.api;
 
 import com.example.pokemon.model.Pokemon;
+import com.example.pokemon.model.TypeInfo;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -30,6 +31,22 @@ public class PokemonApiAbrufer implements PokemonApi{
                 throw new IOException("Pokemon not found");
             }
             return gson.fromJson( response.body(), Pokemon.class);
+        } catch (IOException | InterruptedException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    @Override
+    public TypeInfo getTypeInfo (String typeInfo) throws IOException{
+        String url = "https://pokeapi.co/api/v2/type/" + typeInfo;
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                throw new IOException("Typ nicht gefunden");
+            }
+            return gson.fromJson(response.body(), TypeInfo.class);
         } catch (IOException | InterruptedException e) {
             throw new IOException(e.getMessage());
         }
