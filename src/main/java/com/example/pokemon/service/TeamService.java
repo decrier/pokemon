@@ -129,4 +129,28 @@ public class TeamService {
         }
     }
 
+    public static void printInfo(Pokemon p){
+        System.out.println("---------------------");
+        System.out.println("Name:\t\t" + p.getName());
+
+        String types = p.getTypes().stream()
+                .map(t -> t.getType().getName())
+                .reduce((a, b) -> a + ", " + b)
+                .orElse("Unknown");
+        System.out.println("Type: \t\t" +types);
+
+        p.getStats().forEach(statBox -> {
+            String statName = statBox.getStat().getName();
+            int value = statBox.getBaseStat();
+            if (statName.equals("hp")) {
+                System.out.printf("%s: \t\t%d\n", statName, value);
+            }
+            if (statName.equals("attack") || statName.equals("defense")) {
+                System.out.printf("%s: \t%d\n", statName, value);
+            }
+        });
+        System.out.println("---------------------");
+        System.out.println();
+    }
+
 }
