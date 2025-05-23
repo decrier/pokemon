@@ -29,7 +29,5 @@ public class Main {
         while (flag) {
             flag = commandHandler.handle();
         }
-
-
     }
 }

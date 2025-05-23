@@ -6,9 +6,7 @@ import com.example.pokemon.model.TypeInfo;
 import com.example.pokemon.team.TeamManagerImpl;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TeamService {
@@ -73,6 +71,62 @@ public class TeamService {
         return typeInfo.getDamageRelations().getDoubleDamageFrom()
                 .stream().map(TypeInfo.TypeRef::getName)
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, Integer> searchWeaksForTeam() throws  IOException{
+        Map<String, Integer> strengthCount = new HashMap<>();
+
+        for (Pokemon p : team) {
+
+            for (Pokemon.TypeBox types : p.getTypes()) {
+                String type = types.getType().getName();
+                List<String> strongAgainst = searchWeaks(type);
+
+                for (String target: strongAgainst) {
+                    strengthCount.merge(target, 1, Integer::sum);
+                }
+            }
+        }
+        return strengthCount;
+    }
+
+    public Map<String, Integer> searchStrongsForTeam() throws  IOException{
+        Map<String, Integer> weaknessCount = new HashMap<>();
+
+        for (Pokemon p : team) {
+
+            for (Pokemon.TypeBox types : p.getTypes()) {
+                String type = types.getType().getName();
+                List<String> weakAgainst = searchStrongs(type);
+
+                for (String target: weakAgainst) {
+                    weaknessCount.merge(target, 1, Integer::sum);
+                }
+            }
+        }
+        return weaknessCount;
+    }
+
+    public void analyseTeamWeakness () {
+        try {
+            Map<String, Integer> strongs = searchStrongsForTeam();
+            System.out.println("Gegen folgenden Typen ist dein Team stark:");
+            System.out.println("  Typ\t\tMenge\n");
+            strongs.entrySet().stream().forEach(e -> System.out.printf("%s : \t\t%d\n", e.getKey(), e.getValue()));
+        } catch (IOException e) {
+            System.out.println("Fehler" + e.getMessage());
+        }
+    }
+
+    public void analyseTeamStrength () {
+        try {
+            Map<String, Integer> weaks = searchWeaksForTeam();
+            System.out.println("Gegen folgenden Typen ist dein Team schwach:");
+            System.out.println("  Typ\t\tMenge\n");
+            weaks.entrySet().stream().forEach(e -> System.out.printf("%s : \t\t%d\n", e.getKey(), e.getValue()));
+        } catch (IOException e) {
+            System.out.println("Fehler" + e.getMessage());
+        }
     }
 
 }

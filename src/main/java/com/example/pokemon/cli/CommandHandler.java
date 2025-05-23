@@ -23,7 +23,7 @@ public class CommandHandler {
     public boolean handle() {
         System.out.println("\nPokemon-MENU:");
         System.out.println("1. Suchen\n2. Team anzeigen\n3. Team speichern\n4. Team laden\n5. Exit\n" +
-                "6. Suche nach Typ\n7. Stark und Schwach gegen\n8. Stark gegen\n9. Schwach gegen\n");
+                "6. Suche nach Typ\n7. Stark und Schwach gegen\n8. Stark gegen\n9. Schwach gegen\n0. Team Analyse\n");
         System.out.print("Ihre Eingabe: ");
         int cmd = Integer.parseInt(scan.nextLine());
 
@@ -104,6 +104,12 @@ public class CommandHandler {
                     List<String> types = teamService.searchStrongs(weak);
                     System.out.printf("\nTyp \"%s\" erleidet doppelten Schaden durch:\n", weak);
                     types.forEach(System.out::println);
+                }
+
+                case 0 -> {
+                    teamService.analyseTeamWeakness();
+                    System.out.println();
+                    teamService.analyseTeamStrength();
                 }
 
                 default -> System.out.println("Unbekannter Befehl");

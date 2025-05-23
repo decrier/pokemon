@@ -19,6 +19,8 @@ public class Pokemon {
         return stats;
     }
 
+
+
     // Static nested classes, da JSON sehr strukturiert ist
     // Pokemon -> Types
     public static class TypeBox {
