@@ -6,6 +6,7 @@ import com.example.pokemon.model.TypeInfo;
 import com.example.pokemon.team.TeamManagerImpl;
 
 import java.io.IOException;
+import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,10 +14,12 @@ public class TeamService {
     private final List<Pokemon> team = new ArrayList<>();
     private final TeamManagerImpl teamManager;
     private final PokemonApiAbrufer api;
+    private final Path saveDir;
 
-    public TeamService(TeamManagerImpl teamManager, PokemonApiAbrufer api) {
+    public TeamService(TeamManagerImpl teamManager, PokemonApiAbrufer api, Path saveDir) {
         this.teamManager = teamManager;
         this.api = api;
+        this.saveDir = saveDir;
     }
 
     public void add(Pokemon p) {
@@ -128,6 +131,25 @@ public class TeamService {
             System.out.println("Fehler" + e.getMessage());
         }
     }
+
+    public void showTeamList() {
+        System.out.println("Teamliste:");
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(saveDir, "*.json")) {
+            boolean empty = true;
+            for (Path file : stream) {
+                System.out.println(" " + file.getFileName());
+                empty = false;
+            }
+            if (empty) {
+                System.out.println("Teams nicht gefunden");
+            }
+        } catch (NoSuchFileException e) {
+            System.out.println("Keine Team");
+        } catch (IOException e) {
+            System.out.println("Fehler beim Verzeichnislesen" + e.getMessage());
+        }
+    }
+
 
     public static void printInfo(Pokemon p){
         System.out.println("---------------------");
