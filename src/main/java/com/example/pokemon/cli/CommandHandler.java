@@ -24,7 +24,7 @@ public class CommandHandler {
         System.out.println("\nPokemon-MENU:");
         System.out.println("1. Suche Pokemon nach Name oder ID\n2. Suche nach Typ\n\n" +
                         "3. Finde schwache Typen gegen [Typ]\n4. Finde starke Typen gegen[Typ]\n5. Finde Starken und Schwachen gegen [Typ]\n\n" +
-                        "6. Team anzeigen\n61. Teamliste\n7. Team speichern\n8. Team laden\n9. Team Analyse\n\n" +
+                        "6. Team anzeigen\n7. Team speichern\n8. Team laden\n9. Team Analyse\n\n" +
                         "0. Exit\n");
         System.out.print("Ihre Eingabe: ");
         String cmd = scan.nextLine();
@@ -91,10 +91,6 @@ public class CommandHandler {
                     }
                 }
 
-                case "61" -> {
-                    teamService.showTeamList();
-                }
-
                 case "7" -> {
                     System.out.print("In die Datei speichern: ");
                     String savefile = "saves\\" + scan.nextLine().trim() + ".json";
@@ -103,7 +99,9 @@ public class CommandHandler {
                 }
 
                 case "8" -> {
-                    System.out.print("Aus der Datei laden: ");
+                    System.out.println();
+                    teamService.showTeamList();
+                    System.out.print("\nWähle dein Team: ");
                     String loadfile = "saves\\" + scan.nextLine().trim() + ".json";
                     teamService.loadTeam(loadfile);
                     System.out.println("Team geladen");
