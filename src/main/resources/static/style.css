@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.section {
+    max-width: 600px;
+    margin-bottom: 30px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.section h2 {
+    margin-top: 0px;
+    font-size: 18px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+label {
+    display: inline-block;
+    width: 140px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+      width: 200px;
+      padding: 5px;
+      margin-right: 10px;
+}
+
+button {
+    padding: 5px 12px;
+    margin-top: 5px;
+}
+
+.result {
+      margin-top: 10px;
+      background: #f9f9f9;
+      padding: 10px;
+      border: 1px solid #ddd;
+      height: 15px;
+}
+.search-result {
+      margin-top: 10px;
+      background: #f9f9f9;
+      padding: 10px;
+      border: 1px solid #ddd;
+      height: 90px;
+}
+
+.fixed-height-result {
+    margin-top: 10px;
+    background: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    height: 200px; 
+    overflow: auto; 
+}
+
+.fixed-height-list {
+    height: auto;
+}
+
+ul {
+    padding-left: 20px;
+}
