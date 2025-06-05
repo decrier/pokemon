@@ -1,6 +1,7 @@
 package com.example.pokemon.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Pokemon {
     private String name;
@@ -70,7 +71,16 @@ public class Pokemon {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Pokemon pokemon = (Pokemon) o;
+        return Objects.equals(name, pokemon.name);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
+    }
 }
 

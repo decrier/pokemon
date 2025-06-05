@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>PokemonApp Web</title>
+</head>
+<body>
+    <h1>Pokemon App Web</h1>
+    <div class="section">
+        <h2>1. Suche Pokemon nach Name oder ID</h2>
+        <label for="search-input">Name oder ID</label>
+        <input type="text" name="" id="search-input" placeholder="pikachu oder 255">
+        <button id="search-btn">Suche</button>
+        <button id="add-btn">Ins Team</button>
+        <div class="search-result" id="search-result"></div>
+    </div>
+     
+    <div class="section">
+        <h2>2. Suche nach Typ</h2>
+        <label for="type-input">Pokemon-Typ:</label>
+        <input type="text" name="" id="type-input" placeholder="fire, water usw.">
+        <button id="type-btn">Suche</button>
+        <div class="fixed-height-result">
+            <ul id="type-list" class="fixed-height-list"></ul>
+        </div>
+        
+    </div>
+
+    <div class="section">
+        <h2>6. Team anzeigen</h2>
+        <button id="team-btn">Team anzeigen</button>
+        <div>
+            <ul id="team-list" class="fixed-height-list"></ul>
+        </div>
+
+        <label for="delete-name">Aus Team werfen</label>
+        <input type="text" id="delete-name">
+        <button id="delete-btn">Löschen</button>
+        <br>
+        <div class="result" id="delete-result"></div>
+
+    </div>
+
+    <div class="section">
+        <h2>7. Team speichern</h2>
+        <label for="save-filename">Dateiname:</label>
+        <input type="text" id="save-filename" placeholder="e.g. my-team">
+        <button id="save-btn">Speichern</button>
+        <div id="save-result" class="result"></div>
+    </div>
+
+     
+    <script src="script.js"></script>
+</body>
+</html>

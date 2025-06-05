@@ -26,6 +26,12 @@ public class TeamService {
         team.add(p);
     }
 
+    public void delete(Pokemon p) {
+        if (team.contains(p)) {
+            team.remove(p);
+        }
+    }
+
     public List<Pokemon> getTeam() {
         return team;
     }
