@@ -138,12 +138,16 @@ public class TeamService {
         }
     }
 
-    public void showTeamList() {
+    // Dateien im "Saves"-Ordner anzeigen
+    public List<String> showTeamList() {
+        List<String> teams = new ArrayList<>();
         System.out.println("Teamliste:");
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(saveDir, "*.json")) {
             boolean empty = true;
             for (Path file : stream) {
-                System.out.println(" " + file.getFileName());
+                String team = file.getFileName().toString().replace(".json", "");
+                teams.add(team);
+                System.out.println("  " + team);
                 empty = false;
             }
             if (empty) {
@@ -154,6 +158,7 @@ public class TeamService {
         } catch (IOException e) {
             System.out.println("Fehler beim Verzeichnislesen" + e.getMessage());
         }
+        return teams;
     }
 
 

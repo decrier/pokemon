@@ -1,5 +1,6 @@
 package com.example.pokemon.web;
 
+import com.example.pokemon.Main;
 import com.example.pokemon.api.PokemonApiAbrufer;
 import com.example.pokemon.cli.CommandHandler;
 import com.example.pokemon.model.Pokemon;
@@ -129,6 +130,26 @@ public class WebServer {
                 res.status(500);
                 return gson.toJson(Map.of("Error", "Fehler beim Speichern"));
             }
+        });
+
+        // Load Team
+        post("/api/team/load", (req, res) -> {
+            Map <?, ?> body = gson.fromJson(req.body(), Map.class);
+            String filename = (String) body.get("filename");
+            try {
+                teamService.loadTeam(filename);
+                return gson.toJson(Map.of("status", "loaded"));
+            } catch (IOException e) {
+                res.status(500);
+                return gson.toJson(Map.of("Error", e.getMessage()));
+            }
+        });
+
+        // Show Team List
+        get("/api/files/list", (req, res) -> {
+            List<String> names = teamService.showTeamList();
+            res.type("application/json");
+            return gson.toJson(names);
         });
 
         get("/", (req, res) -> {

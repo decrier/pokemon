@@ -195,6 +195,34 @@ let pokemonInput = '';
                     resultDiv.textContent = `Fehler: ` + err;
                 })
         });
+
+        document.getElementById('load-btn').addEventListener('click', () => {
+            const filename = document.getElementById('load-filename').value.trim().toLowerCase();
+            const resultDiv = document.getElementById('load-result');
+
+            if (!filename) {
+                resultDiv.textContent = 'Gebe Dateiname ein';
+                return;
+            }
+
+            fetch(`${API}/api/team/load`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename })
+            })
+                .then(res => {
+                    if (!res.ok) return res.json().then(
+                                        e => Promise.reject(e.error || 'Fehler'));
+                    return res.json();
+                })
+                .then(data => {
+                    resultDiv.textContent = `Team wurde aus ${filename} geladen`;
+                    loadTeamList();
+                }) 
+                .catch (err => {
+                    resultDiv.textContent = 'Fehler: ' + err;
+                });
+        });
         
 
         // schreibt das Wort mit einem Großbuchstaben
