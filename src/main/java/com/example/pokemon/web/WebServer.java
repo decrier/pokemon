@@ -74,6 +74,31 @@ public class WebServer {
             }
         });
 
+        // Suche nach Schwäche oder Stärke
+        get("/api/typeinfo/weaks/:typeName", (req, res) -> {
+           String typeName = req.params("typeName").toLowerCase();
+           try {
+               List<String> weaks = teamService.searchWeaks(typeName);
+               res.type("application/json");
+               return gson.toJson(weaks);
+           } catch (IOException e) {
+               res.status(404);
+               return gson.toJson(Map.of("error", "Typ nicht gefunden"));
+           }
+        });
+
+        get("/api/typeinfo/strongs/:typeName", (req, res) -> {
+            String typeName = req.params("typeName").toLowerCase();
+            try {
+                List<String> strongs = teamService.searchStrongs(typeName);
+                res.type("application/json");
+                return gson.toJson(strongs);
+            } catch (IOException e) {
+                res.status(404);
+                return gson.toJson(Map.of("error", "Typ nicht gefunden"));
+            }
+        });
+
         // Team anzeigen
         get("/api/team", (req, res) -> {
             List<Pokemon> team = teamService.getTeam();
@@ -135,14 +160,27 @@ public class WebServer {
         // Load Team
         post("/api/team/load", (req, res) -> {
             Map <?, ?> body = gson.fromJson(req.body(), Map.class);
-            String filename = (String) body.get("filename");
+            String filename = (String) body.get("filename") + ".json";
+            String fullPath = "saves/" + filename;
             try {
-                teamService.loadTeam(filename);
+                teamService.loadTeam(fullPath);
                 return gson.toJson(Map.of("status", "loaded"));
             } catch (IOException e) {
                 res.status(500);
                 return gson.toJson(Map.of("Error", e.getMessage()));
             }
+        });
+
+        // analyse team
+        get("/api/team/weakness", (req, res) -> {
+            Map<String, Integer> strongs = teamService.searchStrongsForTeam();
+            res.type("application/json");
+            return gson.toJson(strongs);
+        });
+        get("/api/team/strength", (req, res) -> {
+            Map<String, Integer> strongs = teamService.searchWeaksForTeam();
+            res.type("application/json");
+            return gson.toJson(strongs);
         });
 
         // Show Team List

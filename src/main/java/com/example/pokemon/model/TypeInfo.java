@@ -50,6 +50,7 @@ public class TypeInfo {
         public static class PokemonRef {
             private String name;
             public String getName () {
+
                 return name;
             }
         }

@@ -3,61 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <script src="utils.js"></script>
     <title>PokemonApp Web</title>
 </head>
-<body>
-    <h1>Pokemon App Web</h1>
-    <div class="section">
-        <h2>1. Suche Pokemon nach Name oder ID</h2>
-        <label for="search-input">Name oder ID</label>
-        <input type="text" name="" id="search-input" placeholder="pikachu oder 255">
-        <button id="search-btn">Suche</button>
-        <button id="add-btn">Ins Team</button>
-        <div class="search-result" id="search-result"></div>
+<body class="bg-light">
+    <div class="container py-4">
+    <h1 class="mb-4 text-center">Pokemon App Web</h1>
+
+
+    <div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h2 class="card-title h5 mb-3">1. Suche Pokemon nach Name oder ID</h2>
+        <form class="row g-2 align-items-center" onsubmit="event.preventDefault(); findPokemonByNameOrId();">
+            <div class="col-auto">
+                <label for="search-input" class="col-form-label">Name oder ID</label>
+            </div>
+
+            <div class="col">
+                <input type="text" class="form-control" id="search-input" placeholder="pikachu oder 255">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary" id="search-btn">
+                    <i class="bi bi-search"></i> Suche
+                </button>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-success" id="add-btn">
+                    <i class="bi bi-plus-circle"></i> Ins Team
+                </button>
+            </div>
+
+        </form>
+
+
+        <div class="search-result mt-3" id="search-result"></div>
     </div>
-     
-    <div class="section">
-        <h2>2. Suche nach Typ</h2>
-        <label for="type-input">Pokemon-Typ:</label>
-        <input type="text" name="" id="type-input" placeholder="fire, water usw.">
-        <button id="type-btn">Suche</button>
-        <div class="fixed-height-result">
-            <ul id="type-list" class="fixed-height-list"></ul>
+    </div>
+
+
+    <div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h2 class="card-title h5 mb-3">2. Suche nach Typ</h2>
+        <form class="row g-2 align-items-center" onsubmit="event.preventDefault(); findByType();">
+            <div class="col-auto">
+                <label for="type-input" class="col-form-label">Pokemon-Typ</label>
+            </div>
+
+            <div class="col">
+                <input type="text" class="form-control" id="type-input" placeholder="fire, water usw.">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary" id="type-btn">
+                    <i class="bi bi-search"></i> Suche
+                </button>
+            </div>
+        </form>
+        <div search-result mt-3>
+            <ul id="type-list" class="fixed-height-list list-group"></ul>
         </div>
+    </div>
+</div>
+
+    <div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h2 class="card-title h5 mb-3">3. Finde schwache/starke Typen gegen [Typ]</h2>
         
+        <form class="row g-2 align-items-center mb-2" onsubmit="event.preventDefault();">
+            <div class="col-auto">
+                <label for="strongs-weaks-input" class="col-form-label">Typ:</label>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="strongs-weaks-input" placeholder="fire, water usw.">
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-warning" id="weaks-btn">
+                    <i class="bi bi-exclamation-triangle"></i>Schwäche
+                </button>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-info text-white" id="strongs-btn">
+                    <i class="bi bi-shield-check"></i>Stärke
+                </button>
+            </div>
+        </form>
+
+
+        <div class="result mt-2 h6" id="s-result"></div>
+        <ul id="s-list" class="fixed-height-list list-group mt-2"></ul>
+
+
+    </div>
     </div>
 
-    <div class="section">
-        <h2>6. Team anzeigen</h2>
-        <button id="team-btn">Team anzeigen</button>
-        <div>
-            <ul id="team-list" class="fixed-height-list"></ul>
+
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="card-title h5 mb-3">4. Players anzeigen</h2>
+
+            <div class="d-flex align-items-center mb-3">
+                <button class="btn btn-secondary me-2" id="players-btn">
+                    <i class="bi bi-people"></i> Players anzeigen
+                </button>
+
+                <input type="text" class="form-control w-auto me-2" id="delete-name" placeholder="Name zum Entfernen">
+                
+                <button class="btn btn-danger" id="delete-btn">
+                    <i class="bi bi-person-x"></i> Löschen
+                </button>
+            </div>
+
+            <ul id="players-list" class="fixed-height-list list-group mb-2"></ul>
+            <div class="result" id="delete-result"></div>
         </div>
-
-        <label for="delete-name">Aus Team werfen</label>
-        <input type="text" id="delete-name">
-        <button id="delete-btn">Löschen</button>
-        <br>
-        <div class="result" id="delete-result"></div>
-
     </div>
 
-    <div class="section">
-        <h2>7. Team speichern</h2>
-        <label for="save-filename">Dateiname:</label>
-        <input type="text" id="save-filename" placeholder="e.g. my-team">
-        <button id="save-btn">Speichern</button>
-        <div id="save-result" class="result"></div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="card-title h5 mb-3">5. Team speichern</h2>
+
+            <form class="row g-2 align-items-center" onsubmit="event.preventDefault(); saveTeam();">
+                <div class="col-auto">
+                    <label for="save-filename" class="col-form-label">Dateiname:</label>
+                </div>
+                <div class="col">
+                    <input type="text" id="save-filename" class="form-control" placeholder="e.g. my-team">
+                </div>
+                <div class="col-auto" >
+                    <button id="save-btn" class="btn btn-success">
+                        <i class="bi bi-save"></i>Speichern
+                    </button>
+                </div>
+            </form>       
+            
+            <div id="save-result" class="result mt-2"></div>
+
+        </div>
     </div>
 
-    <div class="section">
-        <h2>8. Team laden</h2>
-        <label for="load-filename">Dateiname:</label>
-        <input type="text" id="load-filename" placeholder="e.g. my-team">
-        <button id="load-btn">Laden</button>
-        <div id="load-result" class="result"></div>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="card-title h5 mb-3">6. Team laden</h2>
+
+            <div class="d-flex align-items-center mb-3">
+                <button id="teams-btn" class="btn btn-secondary me-2">
+                    <i class="bi bi-people"></i>Teamliste anzeigen
+                </button>
+
+                <input type="text" class="form-control w-auto me-2" id="load-filename" placeholder="e.g. my-team">
+
+                <button id="load-btn"class="btn btn-primary">
+                    <i class="bi bi-folder2-open"></i> Laden
+                </button>
+            </div>
+
+            <ul id="teams-list" class="fixed-height-list list-group mb-2"></ul>
+            <div id="load-result" class="result"></div>
+        </div>
     </div>
 
+    <div class="card shadow-sm mb-4">
+        <div class="card-body" id="weakness-section">
+            <h2 class="card-title h5 mb-3">7. Team Analysator</h2>
+            <div class="d-flex flex-wrap gap-2 mb-2">
+                <button class="btn btn-warning" id="weakness-btn">
+                    <i class="bi bi-exclamation-triangle"></i> Schwächen analysieren
+                </button>
+                <button class="btn btn-info text-white" id="strength-btn">
+                    <i class="bi bi-shield-check"></i> Stärken analysieren
+                </button>
+            </div>
+
+            <div class="result mt-2" id="strength-result"></div>
+            <ul id="strength-list" class="fixed-height-list list-group mt-2"></ul>
+        </div>
+    </div>
+
+    </div>
+</div>
      
     <script src="script.js"></script>
 </body>
