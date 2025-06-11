@@ -4,12 +4,17 @@ import java.util.List;
 import java.util.Objects;
 
 public class Pokemon {
+    private int id;
     private String name;
     private List<TypeBox> types;
     private List<StatBox> stats;
 
     public String getName() {
         return name;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public List<TypeBox> getTypes() {

@@ -1,49 +1,33 @@
 package com.example.pokemon.web;
 
-import com.example.pokemon.Main;
 import com.example.pokemon.api.PokemonApiAbrufer;
-import com.example.pokemon.cli.CommandHandler;
+import com.example.pokemon.database.Database;
 import com.example.pokemon.model.Pokemon;
+import com.example.pokemon.persistence.TeamRepositoryImpl;
 import com.example.pokemon.service.TeamService;
-import com.example.pokemon.team.TeamManagerImpl;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import static spark.Spark.*;
 
 public class WebServer {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
+
+        //Connection conn = Database.connect();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         HttpClient client = HttpClient.newHttpClient();
-        ObjectMapper mapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        Scanner scan = new Scanner(System.in);
 
-
-        Path saveDir = Paths.get("saves");
-        if (Files.notExists(saveDir)) {
-            try {
-                Files.createDirectories(saveDir);
-            } catch(IOException e) {
-                System.out.println("Fehler beim Erstellen des Ordners" + e.getMessage());
-            }
-        }
-
-        PokemonApiAbrufer apiAbrufer = new PokemonApiAbrufer(client, gson);
-        TeamManagerImpl tm = new TeamManagerImpl(gson, mapper);
-        TeamService teamService = new TeamService(tm, apiAbrufer, saveDir);
-        CommandHandler commandHandler = new CommandHandler(apiAbrufer, teamService, scan);
+        PokemonApiAbrufer api = new PokemonApiAbrufer(client, gson);
+        TeamRepositoryImpl repo = new TeamRepositoryImpl(gson);
+        TeamService teamService = new TeamService(api, repo);
 
         port(8080);
         staticFiles.location("/static");
@@ -52,7 +36,7 @@ public class WebServer {
         get("/api/pokemon/:nameOrId", (req, res) -> {
             String nameOrId = req.params("nameOrId");
             try {
-                Pokemon p = apiAbrufer.getJsonString(nameOrId);
+                Pokemon p = api.getJsonString(nameOrId);
                 res.type("application/json");
                 return gson.toJson(p);
             } catch (IOException e) {
@@ -65,7 +49,7 @@ public class WebServer {
         get("/api/type/:typeName", (req, res) -> {
             String typeName = req.params("typeName").toLowerCase();
             try {
-                List<String> pokemons = apiAbrufer.getByType(typeName);
+                List<String> pokemons = api.getByType(typeName);
                 res.type("application/json");
                 return gson.toJson(pokemons);
             } catch (IOException e) {
@@ -111,7 +95,7 @@ public class WebServer {
             Map<?, ? > body = gson.fromJson(req.body(), Map.class);
             String nameOrId = ((String) body.get("nameOrId")).trim().toLowerCase();
             try {
-                Pokemon p = apiAbrufer.getJsonString(nameOrId);
+                Pokemon p = api.getJsonString(nameOrId);
                 teamService.add(p);
                 res.status(201);
                 res.type("application/json");
@@ -127,7 +111,7 @@ public class WebServer {
             Map<?, ? > body = gson.fromJson(req.body(), Map.class);
             String nameOrId = ((String) body.get("nameOrId")).trim().toLowerCase();
             try {
-                Pokemon p = apiAbrufer.getJsonString(nameOrId);
+                Pokemon p = api.getJsonString(nameOrId);
                 if(teamService.getTeam().contains(p)) {
                     teamService.delete(p);
                     res.status(201);
@@ -143,31 +127,29 @@ public class WebServer {
         });
 
         // Save Team
-        post("/api/team/save", (req, res) -> {
-            Map<?, ?> body = gson.fromJson(req.body(), Map.class);
-            String filename = ((String) body.get("filename")).trim() + ".json";
+        post("/api/teams/:name", (req, res) -> {
+            String name = req.params("name");
             try {
-                String fullPath = "saves/" + filename;
-                teamService.saveTeam(fullPath);
-                res.type("application/json");
-                return gson.toJson(Map.of("status", "saved", "file", filename));
-            } catch (IOException e) {
+                teamService.save(name);
+                res.status(201);
+                return gson.toJson(Map.of("status", "saved", "team", name));
+            } catch (SQLException e) {
                 res.status(500);
-                return gson.toJson(Map.of("Error", "Fehler beim Speichern"));
+                return gson.toJson(Map.of("error", "Speicherfehler"));
             }
         });
 
         // Load Team
-        post("/api/team/load", (req, res) -> {
-            Map <?, ?> body = gson.fromJson(req.body(), Map.class);
-            String filename = (String) body.get("filename") + ".json";
-            String fullPath = "saves/" + filename;
+        get("/api/teams/:name", (req, res) -> {
+            String name = req.params("name");
             try {
-                teamService.loadTeam(fullPath);
-                return gson.toJson(Map.of("status", "loaded"));
-            } catch (IOException e) {
-                res.status(500);
-                return gson.toJson(Map.of("Error", e.getMessage()));
+                teamService.load(name);
+                List<Pokemon> pokemons = teamService.getTeam();
+                res.type("application/json");
+                return gson.toJson(pokemons);
+            }catch (SQLException e) {
+                res.status(404);
+                return gson.toJson(Map.of("error", "Team nicht gefunden"));
             }
         });
 
@@ -183,11 +165,29 @@ public class WebServer {
             return gson.toJson(strongs);
         });
 
+        System.out.println(">>> Starting route registration...");
+
         // Show Team List
-        get("/api/files/list", (req, res) -> {
-            List<String> names = teamService.showTeamList();
+        get("/api/team/l", (req, res) -> {
+            List<String> teams = teamService.showTeamList();
             res.type("application/json");
-            return gson.toJson(names);
+
+            return gson.toJson(teams);
+        });
+
+        // Delete Team
+        delete("/api/teams/:name", (req, res) -> {
+
+            String name = req.params("name");
+            try {
+                teamService.deleteTeam(name);
+                res.status(201);
+                res.type("application/json");
+                return gson.toJson(Map.of("status", "deleted", "team", name));
+            } catch (SQLException e) {
+                res.status(500);
+                return gson.toJson(Map.of("error", "Löschfehler"));
+            }
         });
 
         get("/", (req, res) -> {

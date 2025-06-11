@@ -4,7 +4,6 @@ import com.example.pokemon.api.PokemonApiAbrufer;
 import com.example.pokemon.service.TeamService;
 import com.example.pokemon.model.Pokemon;
 
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Scanner;
 
@@ -94,16 +93,16 @@ public class CommandHandler {
                 case "7" -> {
                     System.out.print("In die Datei speichern: ");
                     String savefile = "saves\\" + scan.nextLine().trim() + ".json";
-                    teamService.saveTeam(savefile);
+                    teamService.save(savefile);
                     System.out.println("Als \"" + savefile + "\" gespeichert");
                 }
 
                 case "8" -> {
                     System.out.println();
-                    teamService.showTeamList();
+                    //teamService.showTeamList();
                     System.out.print("\nWähle dein Team: ");
                     String loadfile = "saves\\" + scan.nextLine().trim() + ".json";
-                    teamService.loadTeam(loadfile);
+                    teamService.load(loadfile);
                     System.out.println("Team geladen");
                 }
 

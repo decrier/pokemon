@@ -3,23 +3,25 @@ package com.example.pokemon.service;
 import com.example.pokemon.api.PokemonApiAbrufer;
 import com.example.pokemon.model.Pokemon;
 import com.example.pokemon.model.TypeInfo;
-import com.example.pokemon.team.TeamManagerImpl;
+import com.example.pokemon.persistence.TeamRepositoryImpl;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class TeamService {
     private final List<Pokemon> team = new ArrayList<>();
-    private final TeamManagerImpl teamManager;
+//    private final TeamManagerImpl teamManager;
     private final PokemonApiAbrufer api;
-    private final Path saveDir;
+//    private final Path saveDir;
+    private final TeamRepositoryImpl repo;
 
-    public TeamService(TeamManagerImpl teamManager, PokemonApiAbrufer api, Path saveDir) {
-        this.teamManager = teamManager;
+    public TeamService(PokemonApiAbrufer api, TeamRepositoryImpl repo) {
+//        this.teamManager = teamManager;
         this.api = api;
-        this.saveDir = saveDir;
+//        this.saveDir = saveDir;
+        this.repo = repo;
     }
 
     public void add(Pokemon p) {
@@ -36,12 +38,12 @@ public class TeamService {
         return team;
     }
 
-    public void saveTeam(String savefile) throws IOException {
-        teamManager.save(team, savefile);
+    public void save(String name) throws SQLException {
+        repo.saveTeam(team, name);
     }
 
-    public void loadTeam(String loadfile) throws IOException {
-        List<Pokemon> loaded = teamManager.load(loadfile);
+    public void load(String loadfile) throws SQLException {
+        List<Pokemon> loaded = repo.loadTeam(loadfile);
         team.clear();
         team.addAll(loaded);
     }
@@ -139,26 +141,12 @@ public class TeamService {
     }
 
     // Dateien im "Saves"-Ordner anzeigen
-    public List<String> showTeamList() {
-        List<String> teams = new ArrayList<>();
-        System.out.println("Teamliste:");
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(saveDir, "*.json")) {
-            boolean empty = true;
-            for (Path file : stream) {
-                String team = file.getFileName().toString().replace(".json", "");
-                teams.add(team);
-                System.out.println("  " + team);
-                empty = false;
-            }
-            if (empty) {
-                System.out.println("Teams nicht gefunden");
-            }
-        } catch (NoSuchFileException e) {
-            System.out.println("Keine Team");
-        } catch (IOException e) {
-            System.out.println("Fehler beim Verzeichnislesen" + e.getMessage());
-        }
-        return teams;
+    public List<String> showTeamList() throws SQLException {
+        return repo.listTeams();
+    }
+
+    public void deleteTeam(String name) throws SQLException {
+        repo.deleteTeam(name);
     }
 
 

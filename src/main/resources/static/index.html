@@ -148,17 +148,29 @@
         <div class="card-body">
             <h2 class="card-title h5 mb-3">6. Team laden</h2>
 
-            <div class="d-flex align-items-center mb-3">
-                <button id="teams-btn" class="btn btn-secondary me-2">
-                    <i class="bi bi-people"></i>Teamliste anzeigen
-                </button>
+            <form class="row g-2 align-items-center mb-2" onsubmit="event.preventDefault();">
+                <div class="col-auto">
+                    <button id="teams-btn" class="btn btn-secondary me-2">
+                        <i class="bi bi-people"></i>Teamliste anzeigen
+                    </button>
+                </div>
 
-                <input type="text" class="form-control w-auto me-2" id="load-filename" placeholder="e.g. my-team">
+                <div class="col">
+                    <input type="text" class="form-control" id="team-name" placeholder="e.g. my-team">
+                </div>
 
-                <button id="load-btn"class="btn btn-primary">
-                    <i class="bi bi-folder2-open"></i> Laden
+                <div class="col-auto">
+                    <button id="load-btn"class="btn btn-primary">
+                        <i class="bi bi-folder2-open"></i> Laden
+                    </button>
+                </div>
+
+                <div class="col-auto">
+                <button id="delete-team-btn"class="btn btn-danger">
+                    <i class="bi bi-person-x"></i> Löschen
                 </button>
-            </div>
+                </div>
+            </form>
 
             <ul id="teams-list" class="fixed-height-list list-group mb-2"></ul>
             <div id="load-result" class="result"></div>

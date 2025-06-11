@@ -174,6 +174,7 @@ function loadPlayersList() {
 
     fetch(`${API}/api/team`)
         .then(res => {
+            console.log(res);
             if(!res.ok) throw new Error('Fehler beim Players-Liste Anzeigen');
                 return res.json();
             })
@@ -199,13 +200,15 @@ function loadTeamsList() {
     const teamList = document.getElementById('teams-list');
     teamList.innerHTML = '<li>Loading...';
 
-    fetch(`${API}/api/files/list`)
+    fetch(`${API}/api/team/l`)
         .then(res => {
+            console.log(res);
             if (!res.ok) throw new Error('Fehler beim Teamsliste Anzeigen');
             return res.json();
         })
         .then(arr =>{
             teamList.innerHTML = '';
+            console.log(arr);
                     
             if (!arr || arr.length === 0) {
                 teamList.innerHTML = '<li>Du hast keine Teams</li>';
@@ -242,7 +245,7 @@ function deletePlayer() {
         return res.json();
     })
     .then(p => {
-        console.log(p);
+
         resultSpan.textContent = p instanceof Error 
                 ? "Pokemon nicht gefunden" : capitalize(p.result);
         document.getElementById('delete-name').value = '';
@@ -255,18 +258,18 @@ function deletePlayer() {
 
 // Team speichern
 function saveTeam() {
-    const filename = document.getElementById('save-filename').value.trim();
+    const name = document.getElementById('save-filename').value.trim().toLowerCase();
     const resultDiv = document.getElementById('save-result');
 
-    if (!filename) {
-        resultDiv.textContent = 'Gebe Dateiname ein';
+    if (!name) {
+        resultDiv.textContent = 'Gebe Teamname ein';
         return;
     }
 
-    fetch(`${API}/api/team/save`, {
+    fetch(`${API}/api/teams/${name}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename })
+        body: JSON.stringify({ name })
     })
         .then(res => {
             if (!res.ok) return res.json().then(
@@ -275,7 +278,7 @@ function saveTeam() {
         })
         .then(data => {
             document.getElementById('save-filename').value = '';
-            resultDiv.textContent = `Als "${filename}.json" gespeichert`;
+            resultDiv.textContent = `Als "${name}" in DB(JS) gespeichert`;
         })
         .catch(err => {
             resultDiv.textContent = `Fehler: ` + err;
@@ -284,32 +287,55 @@ function saveTeam() {
 
 // Team laden
 function loadTeam() {
-    const filename = document.getElementById('load-filename').value.trim().toLowerCase();
+    const teamName = document.getElementById('team-name').value.trim().toLowerCase();
     const resultDiv = document.getElementById('load-result');
 
-    if (!filename) {
+    if (!teamName) {
         resultDiv.textContent = 'Gebe Dateiname ein';
         return;
     }
 
-    fetch(`${API}/api/team/load`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename })
-    })
+    fetch(`${API}/api/teams/${teamName}`)
         .then(res => {
-            if (!res.ok) return res.json().then(
-                                e => Promise.reject(e.error || 'Fehler'));
+            if (!res.ok) throw new Error("Team nicht gefunden");
             return res.json();
         })
-        .then(data => {
-            resultDiv.textContent = `Team wurde aus ${filename} geladen`;
+        .then(arr => {
+            resultDiv.textContent = `Team wurde aus ${teamName} geladen`;
             loadPlayersList();
-            document.getElementById('load-filename').value = '';
+            document.getElementById('team-name').value = '';
         }) 
         .catch (err => {
             resultDiv.textContent = 'Fehler: ' + err;
     });
+}
+
+function deleteTeam() {
+    const teamName = document.getElementById('team-name').value.trim().toLowerCase();
+    const resultDiv = document.getElementById('load-result');
+
+    if(!teamName) {
+        resultDiv.textContent = 'Gebe den Name ein.';
+        return;
+    }
+
+    fetch(`${API}/api/teams/${teamName}`, {
+        method: 'DELETE',
+        /*
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: teamName})*/
+    })
+        .then(res => {
+            if (!res.ok) return res.json().then(
+                                e => Promise.reject(e.error || 'Fehler'));
+                return res.json();
+        })
+        .then(data => {
+            resultDiv.textContent = `Team "${teamName}" wurde gelöscht`;
+            loadTeamsList();
+            document.getElementById('team-name').value = '';
+        })
+
 }
 
 function analyzeTeamWeakness() {

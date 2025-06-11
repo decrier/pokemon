@@ -58,6 +58,11 @@ let pokemonInput = '';
             document.getElementById('teams-list').innerHTML = '';
         });
 
+        // Team löschen
+        document.getElementById('delete-team-btn').addEventListener('click', () => {
+            deleteTeam();
+        });
+
         // Team analysieren
         document.getElementById('weakness-btn').addEventListener('click', () => {
             analyzeTeamWeakness();
