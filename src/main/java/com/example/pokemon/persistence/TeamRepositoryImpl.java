@@ -40,16 +40,21 @@ public class TeamRepositoryImpl implements  TeamRepository{
             }
 
             // Insert "new" Pokemons
-            String insert = "INSERT INTO team_pokemon (team_id, pokemon_id, name, data) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(insert)){
+            String insertPokemon = "INSERT INTO pokemons (id, name, data) VALUES (?, ?, ?) ON CONFLICT (id) DO NOTHING";
+            String insertLink = "INSERT INTO team_pokemon (team_id, pokemon_id) VALUES (?,?)";
+            try (PreparedStatement stmtUp = conn.prepareStatement(insertPokemon);
+                    PreparedStatement stmtLink = conn.prepareStatement(insertLink)){
                 for (Pokemon p: pokemons) {
-                    stmt.setInt(1, teamId);
-                    stmt.setInt(2, p.getId());
-                    stmt.setString(3, p.getName());
-                    stmt.setObject(4, gson.toJson(p), Types.OTHER);
-                    stmt.addBatch();
+                    stmtUp.setInt(1, p.getId());
+                    stmtUp.setString(2, p.getName());
+                    stmtUp.setObject(3, gson.toJson(p), Types.OTHER);
+                    stmtUp.executeUpdate();
+
+                    stmtLink.setInt(1, teamId);
+                    stmtLink.setInt(2, p.getId());
+                    stmtLink.addBatch();
                 }
-                stmt.executeBatch();
+                stmtLink.executeBatch();
             }
             conn.commit();
         }
@@ -58,7 +63,12 @@ public class TeamRepositoryImpl implements  TeamRepository{
     @Override
     public List<Pokemon> loadTeam(String teamname) throws SQLException{
         List<Pokemon> result = new ArrayList<>();
-        String sql = "SELECT tp.data FROM team_pokemon tp JOIN teams t on tp.team_id = t.id WHERE t.name  = ?";
+        String sql = """
+                    SELECT data FROM pokemons p 
+                    JOIN team_pokemon tp ON tp.pokemon_id = p.id 
+                    JOIN teams t ON tp.team_id = t.id
+                    WHERE t.name  = ?;
+                    """;
 
         try(Connection conn = Database.connect()) {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -66,7 +76,7 @@ public class TeamRepositoryImpl implements  TeamRepository{
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String json = rs.getString("data");
+                String json = rs.getString(1);
                 Pokemon p = gson.fromJson(json, Pokemon.class);
                 result.add(p);
             }

@@ -106,6 +106,13 @@ public class WebServer {
             }
         });
 
+        // Team clear
+        get("api/team/clear", (req, res) ->{
+            teamService.clear();
+            res.type("application/json");
+            return gson.toJson(Map.of("status", "list is empty"));
+        });
+
         // Aus dem Team Löschen
         post("/api/pokemon/delete", (req, res) -> {
             Map<?, ? > body = gson.fromJson(req.body(), Map.class);
@@ -164,8 +171,6 @@ public class WebServer {
             res.type("application/json");
             return gson.toJson(strongs);
         });
-
-        System.out.println(">>> Starting route registration...");
 
         // Show Team List
         get("/api/team/l", (req, res) -> {

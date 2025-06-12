@@ -110,8 +110,12 @@
 
                 <input type="text" class="form-control w-auto me-2" id="delete-name" placeholder="Name zum Entfernen">
                 
-                <button class="btn btn-danger" id="delete-btn">
-                    <i class="bi bi-person-x"></i> Löschen
+                <button class="btn btn-danger me-2" id="delete-btn">
+                    <i class="bi bi-person-x"></i> Player löschen
+                </button>
+
+                <button class="btn btn-warning me-2" id="clear-btn">
+                    <i class="bi bi-exclamation-triangle"></i> Alle löschen
                 </button>
             </div>
 
@@ -120,33 +124,9 @@
         </div>
     </div>
 
-
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <h2 class="card-title h5 mb-3">5. Team speichern</h2>
-
-            <form class="row g-2 align-items-center" onsubmit="event.preventDefault(); saveTeam();">
-                <div class="col-auto">
-                    <label for="save-filename" class="col-form-label">Dateiname:</label>
-                </div>
-                <div class="col">
-                    <input type="text" id="save-filename" class="form-control" placeholder="e.g. my-team">
-                </div>
-                <div class="col-auto" >
-                    <button id="save-btn" class="btn btn-success">
-                        <i class="bi bi-save"></i>Speichern
-                    </button>
-                </div>
-            </form>       
-            
-            <div id="save-result" class="result mt-2"></div>
-
-        </div>
-    </div>
-
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h2 class="card-title h5 mb-3">6. Team laden</h2>
+            <h2 class="card-title h5 mb-3">5. Team verwalten</h2>
 
             <form class="row g-2 align-items-center mb-2" onsubmit="event.preventDefault();">
                 <div class="col-auto">
@@ -156,7 +136,13 @@
                 </div>
 
                 <div class="col">
-                    <input type="text" class="form-control" id="team-name" placeholder="e.g. my-team">
+                    <input type="text" class="form-control" id="team-name" placeholder="z.B. my-team">
+                </div>
+
+                <div class="col-auto">
+                    <button id="save-btn"class="btn btn-success">
+                        <i class="bi bi-save"></i> Speichern
+                    </button>
                 </div>
 
                 <div class="col-auto">
@@ -179,7 +165,7 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-body" id="weakness-section">
-            <h2 class="card-title h5 mb-3">7. Team Analysator</h2>
+            <h2 class="card-title h5 mb-3">6. Team Analysator</h2>
             <div class="d-flex flex-wrap gap-2 mb-2">
                 <button class="btn btn-warning" id="weakness-btn">
                     <i class="bi bi-exclamation-triangle"></i> Schwächen analysieren

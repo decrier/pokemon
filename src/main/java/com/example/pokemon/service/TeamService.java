@@ -38,6 +38,10 @@ public class TeamService {
         return team;
     }
 
+    public void clear() {
+        team.clear();
+    }
+
     public void save(String name) throws SQLException {
         repo.saveTeam(team, name);
     }

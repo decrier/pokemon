@@ -167,6 +167,24 @@ function findStrongs() {
         });
 }
 
+// Alle Players löschen
+
+function clearList() {
+    const resultSpan = document.getElementById('delete-result');
+
+    fetch(`${API}/api/team/clear`)
+        .then(res => {
+            if(!res.ok) throw new Error('Fehler beim Löschen');
+                return res.json();
+            })
+        .then (data => {
+            loadPlayersList();
+        })
+        .catch(err => {
+            resultSpan.textContent = `Fehler: ${err.message}`;
+        });
+}
+
 // Players anzeigen
 function loadPlayersList() {
     const list = document.getElementById('players-list');
@@ -174,7 +192,6 @@ function loadPlayersList() {
 
     fetch(`${API}/api/team`)
         .then(res => {
-            console.log(res);
             if(!res.ok) throw new Error('Fehler beim Players-Liste Anzeigen');
                 return res.json();
             })
@@ -202,13 +219,11 @@ function loadTeamsList() {
 
     fetch(`${API}/api/team/l`)
         .then(res => {
-            console.log(res);
             if (!res.ok) throw new Error('Fehler beim Teamsliste Anzeigen');
             return res.json();
         })
         .then(arr =>{
             teamList.innerHTML = '';
-            console.log(arr);
                     
             if (!arr || arr.length === 0) {
                 teamList.innerHTML = '<li>Du hast keine Teams</li>';
@@ -258,8 +273,8 @@ function deletePlayer() {
 
 // Team speichern
 function saveTeam() {
-    const name = document.getElementById('save-filename').value.trim().toLowerCase();
-    const resultDiv = document.getElementById('save-result');
+    const name = document.getElementById('team-name').value.trim().toLowerCase();
+    const resultDiv = document.getElementById('load-result');
 
     if (!name) {
         resultDiv.textContent = 'Gebe Teamname ein';
@@ -277,8 +292,8 @@ function saveTeam() {
             );
         })
         .then(data => {
-            document.getElementById('save-filename').value = '';
-            resultDiv.textContent = `Als "${name}" in DB(JS) gespeichert`;
+            document.getElementById('team-name').value = '';
+            resultDiv.textContent = `Als "${name}" in DB gespeichert`;
         })
         .catch(err => {
             resultDiv.textContent = `Fehler: ` + err;

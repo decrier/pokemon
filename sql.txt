@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS pokemons (
+  id        INTEGER    PRIMARY KEY,
+  name      TEXT       NOT NULL,
+  data      JSONB      NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS teams (
+  id          INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name        TEXT         UNIQUE NOT NULL,
+  created_at  TIMESTAMPTZ  NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS team_pokemon (
+  team_id     INTEGER      NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
+  pokemon_id  INTEGER      NOT NULL REFERENCES pokemons(id),
+  PRIMARY KEY(team_id, pokemon_id)
+);

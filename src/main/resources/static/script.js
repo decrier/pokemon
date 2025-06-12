@@ -45,6 +45,11 @@ let pokemonInput = '';
             deletePlayer();
         });
 
+        // Alle Players Löschen
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            clearList();
+        });
+
 
         // Team speichern
         document.getElementById('save-btn').addEventListener('click', () => {
@@ -69,4 +74,28 @@ let pokemonInput = '';
         });
         document.getElementById('strength-btn').addEventListener('click', () => {
             analyzeTeamStrength();
+        });
+
+        document.getElementById('type-list').addEventListener('click', function(event) {
+            if (event.target && event.target.nodeName === 'LI') {
+                document.getElementById('search-input').value = event.target.textContent;
+            }
+        });
+
+        document.getElementById('players-list').addEventListener('click', function(event) {
+            if (event.target && event.target.nodeName === 'LI') {
+                document.getElementById('delete-name').value = event.target.textContent;
+            }
+        });
+
+        document.getElementById('teams-list').addEventListener('click', function(event) {
+            if (event.target && event.target.nodeName === 'LI') {
+                document.getElementById('team-name').value = event.target.textContent;
+            }
+        });
+
+        document.getElementById('s-list').addEventListener('click', function(event) {
+            if (event.target && event.target.nodeName === 'LI') {
+                document.getElementById('strongs-weaks-input').value = event.target.textContent;
+            }
         });
